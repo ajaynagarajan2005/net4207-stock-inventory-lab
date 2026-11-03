@@ -5,7 +5,7 @@
 | Student name | _fill in_ |
 | Student ID | _fill in_ |
 | Tutorial group | _fill in_ |
-| GitHub repository | _fill in_ |
+| GitHub repository | https://github.com/ajaynagarajan2005/net4207-stock-inventory-lab |
 
 ## Setup and run
 
