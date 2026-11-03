@@ -1,0 +1,39 @@
+rules_version = '2';
+
+// NET4207 Stock Inventory Lab.
+// Only the stockItems collection is reachable. Every create and update must
+// match the lab schema, so the server enforces the same rules as the form.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function validItem(d) {
+      return d.keys().hasAll(['sku', 'itemName', 'category', 'quantity',
+                              'unitPrice', 'reorderLevel', 'createdAt'])
+        && d.keys().hasOnly(['sku', 'itemName', 'category', 'quantity',
+                             'unitPrice', 'reorderLevel', 'createdAt',
+                             'updatedAt'])
+        && d.sku is string && d.sku.matches('^STK-[0-9]{3}$')
+        && d.itemName is string && d.itemName.size() >= 3
+        && d.category in ['Electronics', 'Stationery', 'Hardware', 'Grocery']
+        && d.quantity is int && d.quantity >= 0
+        && d.unitPrice is number && d.unitPrice > 0
+        && d.reorderLevel is int && d.reorderLevel >= 0;
+    }
+
+    match /stockItems/{itemId} {
+      allow read: if true;
+
+      // New items get a server timestamp (also used by Undo after delete).
+      allow create: if validItem(request.resource.data)
+        && request.resource.data.createdAt == request.time
+        && !('updatedAt' in request.resource.data);
+
+      // Edits and quick restock: createdAt is fixed, updatedAt is stamped.
+      allow update: if validItem(request.resource.data)
+        && request.resource.data.createdAt == resource.data.createdAt
+        && request.resource.data.updatedAt == request.time;
+
+      allow delete: if true;
+    }
+  }
+}
