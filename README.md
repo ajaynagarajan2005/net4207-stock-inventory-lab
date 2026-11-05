@@ -6,6 +6,7 @@
 | Student ID | _fill in_ |
 | Tutorial group | _fill in_ |
 | GitHub repository | https://github.com/ajaynagarajan2005/net4207-stock-inventory-lab |
+| Live app | https://net4207-stock-lab-an.web.app |
 
 ## Setup and run
 
@@ -18,7 +19,7 @@ flutter pub get
 flutter run -d chrome
 ```
 
-Unit tests: `flutter test`. Deploy the Firestore rules: `firebase deploy --only firestore:rules`.
+Unit tests: `flutter test`. Deploy the Firestore rules: `firebase deploy --only firestore:rules`. Deploy the site: `flutter build web`, then `firebase deploy --only hosting`.
 
 ## Write-up
 
